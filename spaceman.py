@@ -60,20 +60,25 @@ def get_guess(prompt, guess_list):
 def spaceman(secret_word):
     length = len(secret_word)
     guess_list = []
+    wrong_count = 0
     print("Help spaceman get to space by correctly guessing letters in the launch code!\nBe careful though, you only get 7 incorrect guesses before the rocket falls apart.")
     print("The launch code has: " + str(length) + " letters.")
     page_break()
     print(secret_word)
-    while is_word_guessed(secret_word, guess_list)==False:
-        print(get_guessed_word(secret_word, guess_list))
+    while is_word_guessed(secret_word, guess_list)==False and wrong_count < 7:
+        print(get_guessed_word(secret_word, guess_list) + " | Incorrect guesses: " + str(wrong_count) + "/7")
         guess = get_guess("Enter a letter: ", guess_list)
         guess_list.append(guess)
         if is_guess_in_word(guess, secret_word):
             print("That letter is in the launch code!")
         else:
             print("Oops! Your rocket just lost a piece.")
+            wrong_count += 1
         page_break()
-    print ("Wow! You won. The launch code was " + secret_word)
+    if wrong_count >= 7:
+        print ("Dang. You lost. The launch code was " + secret_word)
+    else:
+        print ("Wow! You won. The launch code was " + secret_word)
     #TODO: show the guessed word so far
 
     #TODO: check if the game has been won or lost
