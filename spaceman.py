@@ -64,12 +64,12 @@ def user_input(prompt):
     return user_input
 
 
-def get_guess(prompt):
+def get_guess(prompt, guess_list):
     letter = user_input(prompt).upper().strip()
     if len(letter) != 1:
-        return get_guess("Please enter exactly one letter: ")
-    elif already_guessed(letter):
-        return get_guess("Please guess a new letter: ")
+        return get_guess("Please enter exactly one letter: ", guess_list)
+    elif letter in guess_list:
+        return get_guess("Please guess a new letter: ", guess_list)
     else:
         return letter
 
@@ -83,9 +83,9 @@ def spaceman(secret_word):
     print(secret_word)
     while is_word_guessed(secret_word, guess_list)==False:
         print(get_guessed_word)
-        guess = get_guess("Enter a letter: ")
+        guess = get_guess("Enter a letter: ", guess_list)
         guess_list.append(guess)
-        if is_guess_in_word(guess):
+        if is_guess_in_word(guess, secret_word):
             print("That letter is in the launch code!")
         else:
             print("Oops! Your rocket just lost a piece.")
