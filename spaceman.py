@@ -27,6 +27,9 @@ def is_word_guessed(secret_word, letters_guessed):
     Returns:
         bool: True only if all the letters of secret_word are in letters_guessed, False otherwise
     '''
+
+    return False
+
     # TODO: Loop through the letters in the secret_word and check if a letter is not in lettersGuessed
     pass
 
@@ -65,7 +68,7 @@ def get_guess(prompt):
     letter = user_input(prompt).upper().strip()
     if len(letter) != 1:
         return get_guess("Please enter exactly one letter: ")
-    elif already_guessed(letter)
+    elif already_guessed(letter):
         return get_guess("Please guess a new letter: ")
     else:
         return letter
@@ -73,25 +76,20 @@ def get_guess(prompt):
 
 def spaceman(secret_word):
     length = len(secret_word)
-    print("Help spaceman get to space by correctly guessing letters in the launch code!\nBe careful though, you only get 7 incorrect guesses before the rocket falls apart."):
-    print("The launch code has: " + length + "letters")
+    guess_list = []
+    print("Help spaceman get to space by correctly guessing letters in the launch code!\nBe careful though, you only get 7 incorrect guesses before the rocket falls apart.")
+    print("The launch code has: " + str(length) + " letters.")
     page_break()
     print(secret_word)
-    while is_word_guessed()==False:
+    while is_word_guessed(secret_word, guess_list)==False:
         print(get_guessed_word)
         guess = get_guess("Enter a letter: ")
+        guess_list.append(guess)
         if is_guess_in_word(guess):
             print("That letter is in the launch code!")
         else:
             print("Oops! Your rocket just lost a piece.")
         page_break()
-    
-
-
-
-    #TODO: Ask the player to guess one letter per round and check that it is only one letter
-
-    #TODO: Check if the guessed letter is in the secret or not and give the player feedback
 
     #TODO: show the guessed word so far
 
