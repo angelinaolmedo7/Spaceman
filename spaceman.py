@@ -240,9 +240,9 @@ def spaceman(secret_word):
         page_break()
     if wrong_count >= 7:
         print_ship(7, get_guessed_word(secret_word, guess_list), alpha_list)
-        print(color('ACCESS DENIED. The code was ' + secret_word, 'red'))
+        print(color('ACCESS DENIED. The code was ' + secret_word + '.', 'red'))
     else:
-        print(color('ACCESS GRANTED. The code was ' + secret_word, 'green'))
+        print(color('ACCESS GRANTED. The code was ' + secret_word + '.', 'green'))
         print_ship(-1, '', alpha_list)
 
 
