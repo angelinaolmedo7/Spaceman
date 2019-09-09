@@ -49,7 +49,10 @@ def user_input(prompt):
 
 
 def get_guess(prompt, guess_list):
-    letter = user_input(prompt).upper().strip()
+    letter = user_input(prompt).strip()
+    if not letter.isalpha():
+            return get_guess('Please enter only letters: ', guess_list)
+    letter = letter.upper()
     if len(letter) != 1:
         return get_guess('Please enter exactly one letter: ', guess_list)
     elif letter in guess_list:
@@ -222,7 +225,7 @@ def spaceman(secret_word):
     print('Get to space by correctly guessing letters in the rocket\'s launch code!\nBe careful though, you only get ' + color('7','red') + ' incorrect guesses before you\'re locked out.')
     print('The launch code has: ' + str(length) + ' letters.')
     page_break()
-    print(secret_word)
+    #print(secret_word)
     while is_word_guessed(secret_word, guess_list)==False and wrong_count < 7:
         print_ship(wrong_count, get_guessed_word(secret_word, guess_list),alpha_list)
         guess = get_guess('Enter a letter: ', guess_list)
