@@ -246,6 +246,20 @@ def spaceman(secret_word):
         print_ship(-1, '', alpha_list)
 
 
+def play_again():
+    again = user_input("Play again? [Y/N]: ")
+    if not again.isalpha():
+        return play_again()
+    elif again.upper().strip() == "YES" or again.upper().strip() == "Y":
+        return True
+    elif again.upper().strip() == "NO" or again.upper().strip() == "N":
+        return False
+    else:
+        return play_again()
+
 #These function calls that will start the game
-secret_word = load_word()
-spaceman(secret_word)
+playing = True
+while playing:
+    secret_word = load_word()
+    spaceman(secret_word)
+    playing = play_again()
