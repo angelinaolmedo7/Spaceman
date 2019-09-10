@@ -17,21 +17,29 @@ def load_word():
     return secret_word.upper()
 
 def is_word_guessed(secret_word, letters_guessed):
+    '''
+    Checks if all letters in the secret word have been guessed
+    Returns true or false
+    '''
     for elem in secret_word:
         if elem not in letters_guessed:
-            return False
-    return True
+            return False #returns false if any letter in the secret word has not been guessed
+    return True #only reached if everything has been guessed
 
 
 def get_guessed_word(secret_word, letters_guessed):
-    rtn = ''
+    '''
+    Returns a string made up of _ and letters from the secret word.
+    Ex. If the word was 'dog' and O had been guessed, would return '_ O _'
+    '''
+    rtn = '' #empty string
     for elem in secret_word:
-        if elem in letters_guessed:
+        if elem in letters_guessed: #if the letter has already been guessed
             rtn += elem
-        else:
+        else: #if the letter has not been guessed
             rtn += '_'
         rtn += ' '
-    return rtn.strip()
+    return rtn.strip() #remove trailing whitespace
 
 
 def is_guess_in_word(guess, secret_word):
@@ -40,28 +48,32 @@ def is_guess_in_word(guess, secret_word):
 
 
 def page_break():
-    print('------------------------------------')
+    print('------------------------------------') #page_break() is easier to type
 
 
 def user_input(prompt):
-    user_input = input(prompt)
+    user_input = input(prompt) #if I'm being honest I don't know why this is different than just using input(prompt)
     return user_input
 
 
 def get_guess(prompt, guess_list):
-    letter = user_input(prompt).strip()
-    if not letter.isalpha():
+    '''
+    Returns the user input using the prompt
+    Useful because can be called recursively to handle invalid inputs
+    '''
+    letter = user_input(prompt).strip() #assign to variable & remove trailing whitespace
+    if not letter.isalpha(): #no numbers/special characters. Must do this before attempting letter.upper()
             return get_guess('Please enter only letters: ', guess_list)
-    letter = letter.upper()
+    letter = letter.upper() #easier to compare to guess_list if all uppercase
     if len(letter) != 1:
-        return get_guess('Please enter exactly one letter: ', guess_list)
+        return get_guess('Please enter exactly one letter: ', guess_list) #empty answers should be removed by isalpha(), but this would also catch
     elif letter in guess_list:
-        return get_guess('Please guess a new letter: ', guess_list)
+        return get_guess('Please guess a new letter: ', guess_list) #duplicate answers do not count against the player
     else:
-        return letter
+        return letter #passed all checks
 
 
-def color(item, colr):
+def color(item, colr): #colors stored in a single function so I can minimieze them all together
     if colr == 'red':
         return '\033[31m{}\033[00m'.format(item)
     elif colr == 'orange':
@@ -102,7 +114,7 @@ def color(item, colr):
                 color_count = -1
             color_count += 1
         return new_string
-    elif colr == 'rainbow sp':
+    elif colr == 'rainbow sp': #I wrote this already for Captain Rainbow Checklist
         color_count = 0
         new_string = ''
         for elem in item:
@@ -127,13 +139,17 @@ def color(item, colr):
         return item
 
 
-def print_ship(count, word_line, alpha_list):
-    if count == -1:
+def print_ship(count, word_line, alpha_list): #this is all very ugly so I want to be able to minimize it
+    '''
+    Handles printing of the ASCII art based on # of incorrect guesses.
+    Lights on the rocket turn red with each miss.
+    '''
+    if count == -1: #win
         print('                       /\\')
         print('                      /  \\')
         print('                     / /\\ \\')
         print('                    | (__) |')
-        print('                    |  ' + color('o','green') + '   |')
+        print('                    |  ' + color('o','green') + '   |') #can't use multiline with ''' ''' because of the coloring
         print('                    |   ' + color('o','green') + '  |')
         print('                    |  ' + color('o','green') + '   |')
         print('                    |   ' + color('o','green') + '  |')
@@ -200,53 +216,63 @@ def print_ship(count, word_line, alpha_list):
 
 
 def update_alpha(alpha_list, target, clr):
+    '''
+    A list of the alphabet is printed beside the rocket.
+    This function makes it easier to update these letters with the correct colors
+    (Red for an incorrect guess and green for a correct guess).
+    '''
     alpha_list[alpha_list.index(target)] = color(target, clr)
-    return alpha_list
+    return alpha_list #use with alpha_list = update_alpha(a,t,c)
 
 
 def format_alpha(alpha_list):
+    '''
+    Spaces the alphabet list nicely for printing. Returns string.
+    '''
     rtn = ""
     for elem in alpha_list:
         rtn += elem
-        rtn += ' '
-    return rtn.strip()
+        rtn += ' ' #space like 'A B C...'
+    return rtn.strip() #remove trailing whitespace
 
 
 def spaceman(secret_word):
-    length = len(secret_word)
-    guess_list = []
+    '''
+    Runs once through the spaceman program
+    '''
+    guess_list = [] #empty list
 
     f = open('alphabet.txt', 'r')
     alpha_list = f.readlines()
     f.close()
-    alpha_list = alpha_list[0].split(' ')
+    alpha_list = alpha_list[0].split(' ') #create a list of letters to color accordingly
 
-    wrong_count = 0
+    wrong_count = 0 #count of incorrect guesses
     print('Get to space by correctly guessing letters in the rocket\'s launch code!\nBe careful though, you only get ' + color('7','red') + ' incorrect guesses before you\'re locked out.')
-    print('The launch code has: ' + str(length) + ' letters.')
+    print('The launch code has: ' + str(len(secret_word)) + ' letters.')
     page_break()
-    #print(secret_word)
-    while is_word_guessed(secret_word, guess_list)==False and wrong_count < 7:
-        print_ship(wrong_count, get_guessed_word(secret_word, guess_list),alpha_list)
+    #print(secret_word) #testing only
+    while is_word_guessed(secret_word, guess_list)==False and wrong_count < 7: #haven't won or lost
+        print_ship(wrong_count, get_guessed_word(secret_word, guess_list),alpha_list) #print ship art and info
         guess = get_guess('Enter a letter: ', guess_list)
-        guess_list.append(guess)
+        guess_list.append(guess) #add new guess to the guess list
         if is_guess_in_word(guess, secret_word):
-            print(color('That letter is in the launch code!', 'green'))
+            print(color('That letter is in the launch code!', 'green')) #correct
             alpha_list = update_alpha(alpha_list, guess, 'green')
         else:
-            print(color('Oops! That letter is not in the launch code.', 'red'))
+            print(color('Oops! That letter is not in the launch code.', 'red')) #incorrect
             alpha_list = update_alpha(alpha_list, guess, 'red')
-            wrong_count += 1
+            wrong_count += 1 #increment wrong_count by 1
         page_break()
-    if wrong_count >= 7:
+    if wrong_count >= 7: #lose condition
         print_ship(7, get_guessed_word(secret_word, guess_list), alpha_list)
         print(color('ACCESS DENIED. The code was ' + secret_word + '.', 'red'))
-    else:
+    else: #win condition: once the while loop ends, the player has either won or lost
         print(color('ACCESS GRANTED. The code was ' + secret_word + '.', 'green'))
         print_ship(-1, '', alpha_list)
 
 
-def play_again():
+def play_again(): #separate from main() so I can call recursively
     again = user_input("Play again? [Y/N]: ")
     if not again.isalpha():
         return play_again()
@@ -255,11 +281,14 @@ def play_again():
     elif again.upper().strip() == "NO" or again.upper().strip() == "N":
         return False
     else:
-        return play_again()
+        return play_again() #invalid input
 
-#These function calls that will start the game
-playing = True
-while playing:
-    secret_word = load_word()
-    spaceman(secret_word)
-    playing = play_again()
+def main(): #main function
+    playing = True #prevents unnecessary global variables
+    while playing:
+        secret_word = load_word()
+        spaceman(secret_word)
+        playing = play_again()
+
+
+main()
