@@ -1,6 +1,6 @@
 """Test Spaceman."""
 import unittest
-from spaceman import is_word_guessed, is_guess_in_word, color
+from spaceman import is_word_guessed, is_guess_in_word, color, load_word
 
 
 class spacemanTests(unittest.TestCase):
@@ -23,6 +23,15 @@ class spacemanTests(unittest.TestCase):
     def test_color(self):
         """Correctly color items."""
         self.assertEqual(color("blue", "blue"), '\033[34mblue\033[00m')
+
+    def test_word_gen(self):
+        """Correctly pick a random word from words_list."""
+        f = open('words.txt', 'r')
+        words_list = f.readlines()
+        f.close()
+        words_list = words_list[0].split(' ')
+        word = load_word()
+        self.assertTrue(word.lower() in words_list)
 
 
 if __name__ == '__main__':
